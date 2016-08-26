@@ -16,13 +16,13 @@ const PluginError = gutil.PluginError;
 function getMetadata(file, extraMetadata = {}) {
   const meta = {
     ...extraMetadata,
-    contentType: mime.lookup(file.path),
+    contentType: mime.lookup(file.path.replace(/\.gz$/, '')),
   };
 
-  // Check if it's gziped
-  if (file.contentEncoding && file.contentEncoding.indexOf('gzip') > -1) {
+  // Check to see if it has a gz (Gzip) extension
+  if (file.extname == '.gz') {
     meta.contentEncoding = 'gzip';
-  }
+  };
 
   return meta;
 }
@@ -144,7 +144,6 @@ function gPublish(options) {
       return done(null, file);
     }
 
-    file.path = file.path.replace(/\.gz$/, '');
     const metadata = getMetadata(file, extraMetadata);
 
     // Authenticate on Google Cloud Storage

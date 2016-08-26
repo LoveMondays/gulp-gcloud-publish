@@ -96,7 +96,7 @@ describe('gulp-gcloud-publish', function suite() {
     .on('error', done);
   });
 
-  it('should recognise a gzip and make it public', function test(done) {
+  it('should recognise a gzip and set contentEncoding', function test(done) {
     createWriteStreamStub.returns(createFakeStream());
     const fakeFile = new File({
       contents: es.readArray(['stream', 'with', 'those', 'contents']),
@@ -104,8 +104,6 @@ describe('gulp-gcloud-publish', function suite() {
       base: '/test/',
       path: '/test/file.css.gz',
     });
-
-    fakeFile.contentEncoding = ['gzip'];
 
     const config = _.clone(exampleConfig);
     config.public = true;
@@ -120,7 +118,6 @@ describe('gulp-gcloud-publish', function suite() {
         contentEncoding: 'gzip',
       });
 
-      assert.ifError(/\.gz$/.test(file.path));
       done();
     })
     .on('error', done);
